@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Weather_OR_NOT</string>
+    <string name="temp">Temp</string>
+    <string name="forecast">Forecast</string>
+    <string name="city">City</string>
+    <string name="placeHolderTemp">70</string>
+    <string name="btnSearchText">Search</string>
+    <string name="etCityHint">City Name</string>
 </resources>

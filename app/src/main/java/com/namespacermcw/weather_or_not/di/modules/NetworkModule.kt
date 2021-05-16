@@ -25,8 +25,8 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideWeatherService(): WeatherAPIService {
-          return provideRetrofit("https://api.openweathermap.org/data/2.5/")
-              .create(WeatherAPIService::class.java)
+        return provideRetrofit("https://api.openweathermap.org/data/2.5/")
+            .create(WeatherAPIService::class.java)
     }
 
     @Singleton

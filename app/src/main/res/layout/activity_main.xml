@@ -6,44 +6,82 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/searchBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/txtCity"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/ic_launcher_foreground" />
+        app:layout_constraintTop_toTopOf="parent">
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:hint="@string/etCityHint"
+            android:inputType="textPersonName"
+            android:textSize="25sp"
+            android:layout_weight="1" />
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/btnSearchText"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivWeather"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchBox" />
 
     <TextView
         android:id="@+id/txtCity"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="City"
-        app:layout_constraintBottom_toTopOf="@+id/txtTemp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        android:layout_marginTop="20sp"
+        android:gravity="center_horizontal"
+        android:text="@string/city"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        app:layout_constraintTop_toBottomOf="@id/ivWeather" />
 
     <TextView
         android:id="@+id/txtTemp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Temp"
-        app:layout_constraintBottom_toTopOf="@+id/txtForecast"
+        android:gravity="center_horizontal"
+        android:text="@string/placeHolderTemp"
+        android:textAlignment="center"
+        android:textSize="70sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txtCity" />
+        app:layout_constraintTop_toBottomOf="@+id/txtCity" />
 
     <TextView
         android:id="@+id/txtForecast"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Forecast"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center_horizontal"
+        android:text="@string/forecast"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/txtTemp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvWeather"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtTemp" />
+        app:layout_constraintTop_toBottomOf="@id/txtForecast"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/weather_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
