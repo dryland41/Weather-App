@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.OnItemClickListener {
         }
     }
 
-    override fun onItemClick(currentCity: City) {
+    override fun onItemClick(currentCity: String) {
         Log.d("_WORK", "Item clicked")
         viewModel.getWeatherByCity(currentCity)
     }

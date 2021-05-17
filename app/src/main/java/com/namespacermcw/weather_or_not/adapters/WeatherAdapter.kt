@@ -8,7 +8,8 @@ import com.bumptech.glide.Glide
 import com.namespacermcw.weather_or_not.databinding.WeatherItemBinding
 import com.namespacermcw.weather_or_not.models.Cities.City
 
-class WeatherAdapter(private val listener: OnItemClickListener) : RecyclerView.Adapter<WeatherAdapter.ViewHolder>() {
+class WeatherAdapter(private val listener: OnItemClickListener) :
+    RecyclerView.Adapter<WeatherAdapter.ViewHolder>() {
 
     lateinit var binding: WeatherItemBinding
 
@@ -30,7 +31,8 @@ class WeatherAdapter(private val listener: OnItemClickListener) : RecyclerView.A
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(binding: WeatherItemBinding): RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+    inner class ViewHolder(binding: WeatherItemBinding) : RecyclerView.ViewHolder(binding.root),
+        View.OnClickListener {
 
         private lateinit var weatherItem: City
 
@@ -51,14 +53,11 @@ class WeatherAdapter(private val listener: OnItemClickListener) : RecyclerView.A
         }
 
         override fun onClick(v: View?) {
-            val position: Int = adapterPosition
-            if(position != RecyclerView.NO_POSITION) {
-                listener.onItemClick(weatherItem)
-            }
+            listener.onItemClick(weatherItem.name)
         }
     }
 
     interface OnItemClickListener {
-        fun onItemClick(currentCity: City)
+        fun onItemClick(currentCity: String)
     }
 }
