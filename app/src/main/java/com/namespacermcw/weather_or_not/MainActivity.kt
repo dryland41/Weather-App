@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.namespacermcw.weather_or_not.adapters.WeatherAdapter
 import com.namespacermcw.weather_or_not.databinding.ActivityMainBinding
+import com.namespacermcw.weather_or_not.models.Cities.CitiesWeatherHead
 import com.namespacermcw.weather_or_not.models.Cities.City
 import com.namespacermcw.weather_or_not.models.WeatherHead.WeatherHead
 import com.namespacermcw.weather_or_not.vm.WeatherViewModel
@@ -19,16 +21,19 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.OnItemClickListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var weatherHead: WeatherHead
+    private lateinit var cityHead: CitiesWeatherHead
     private lateinit var viewModel: WeatherViewModel
     private lateinit var weatherAdapter: WeatherAdapter
+    private val lifecycleOwner = this as LifecycleOwner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
         weatherAdapter = WeatherAdapter(this)
+
+        viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
 
         val linearLayoutManager = LinearLayoutManager(
             this,
@@ -41,32 +46,34 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.OnItemClickListener {
             adapter = weatherAdapter
         }
 
+        viewModel.getWeather().observe(lifecycleOwner, Observer { newWeather ->
+            Log.d("_WORK", "Got weather report")
+            this.weatherHead = newWeather
+            updateWeather()
+        })
+
+        viewModel.getCities()
+            .observe(lifecycleOwner, Observer { newCities ->
+                Log.d("_WORK", "Got cities ${newCities.cityList.size}")
+                this.cityHead = newCities
+                (binding.rvWeather.adapter as WeatherAdapter).updateList(newCities.cityList)
+            })
+
+        viewModel.getWeatherByCity("Dover")
+
         binding.btnSearch.apply {
             setOnClickListener {
                 hideSoftKeyboard(this@MainActivity)
                 Log.d("_WORK", "btnSearch Clicked")
                 viewModel.getWeatherByCity(binding.etSearch.text.toString())
+                viewModel.getNearbyCities(weatherHead.coord.lat, weatherHead.coord.lon)
+                (binding.rvWeather.adapter as WeatherAdapter).updateList(cityHead.cityList)
             }
         }
-
-        viewModel.getWeather().observe(this, Observer { newWeather ->
-            Log.d("_WORK", "Got weather report")
-            updateWeather(newWeather)
-        })
-
-        viewModel.getCities()
-            .observe(this, Observer { newWeather ->
-                Log.d("_WORK", "Got cities ${newWeather.cityList.size}")
-                (binding.rvWeather.adapter as WeatherAdapter).updateList(newWeather.cityList)
-            })
-
-        viewModel.getWeatherByCity("Dover")
-
     }
 
-    private fun updateWeather(weatherHead: WeatherHead) {
+    private fun updateWeather() {
         Log.d("_WORK", "We got weather head  ${weatherHead.name}")
-        this.weatherHead = weatherHead
 
         with(binding) {
             ivWeather.apply {
@@ -77,12 +84,15 @@ class MainActivity : AppCompatActivity(), WeatherAdapter.OnItemClickListener {
             txtTemp.text = weatherHead.main.temp.toInt().toString()
             txtForecast.text = weatherHead.weather[0].main
             txtCity.text = weatherHead.name
+
+            viewModel.getNearbyCities(weatherHead.coord.lat, weatherHead.coord.lon)
         }
     }
 
-    override fun onItemClick(currentCity: String) {
+    override fun onItemClick(currentCity: City) {
         Log.d("_WORK", "Item clicked")
-        viewModel.getWeatherByCity(currentCity)
+        viewModel.getWeatherByCity(currentCity.name)
+        viewModel.getNearbyCities(currentCity.coord.lat, currentCity.coord.lon)
     }
 
     private fun hideSoftKeyboard(activity: Activity) {

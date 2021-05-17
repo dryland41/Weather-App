@@ -11,13 +11,16 @@ import com.namespacermcw.weather_or_not.models.Cities.City
 class WeatherAdapter(private val listener: OnItemClickListener) :
     RecyclerView.Adapter<WeatherAdapter.ViewHolder>() {
 
-    lateinit var binding: WeatherItemBinding
-
     private var cityList: List<City> = emptyList()
 
+    fun updateList(newList: List<City>) {
+        cityList = newList
+        notifyDataSetChanged()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherAdapter.ViewHolder {
-        binding = WeatherItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        val view = WeatherItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: WeatherAdapter.ViewHolder, position: Int) {
@@ -26,12 +29,7 @@ class WeatherAdapter(private val listener: OnItemClickListener) :
 
     override fun getItemCount(): Int = cityList.size
 
-    fun updateList(newList: List<City>) {
-        cityList = newList
-        notifyDataSetChanged()
-    }
-
-    inner class ViewHolder(binding: WeatherItemBinding) : RecyclerView.ViewHolder(binding.root),
+    inner class ViewHolder(private val binding: WeatherItemBinding) : RecyclerView.ViewHolder(binding.root),
         View.OnClickListener {
 
         private lateinit var weatherItem: City
@@ -53,11 +51,11 @@ class WeatherAdapter(private val listener: OnItemClickListener) :
         }
 
         override fun onClick(v: View?) {
-            listener.onItemClick(weatherItem.name)
+            listener.onItemClick(weatherItem)
         }
     }
 
     interface OnItemClickListener {
-        fun onItemClick(currentCity: String)
+        fun onItemClick(currentCity: City)
     }
 }

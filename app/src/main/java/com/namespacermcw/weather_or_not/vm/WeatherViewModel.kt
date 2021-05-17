@@ -52,7 +52,6 @@ class WeatherViewModel : ViewModel() {
     private fun weatherSuccess(weatherHead: WeatherHead) {
         Log.d("_WORK", "Getting weather")
         weatherReport.postValue(weatherHead)
-        getNearbyCities(latitude = weatherHead.coord.lat, longitude = weatherHead.coord.lon)
     }
 
     private fun citiesSuccess(city: CitiesWeatherHead) {
